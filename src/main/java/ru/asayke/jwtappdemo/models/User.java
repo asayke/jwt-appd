@@ -1,9 +1,13 @@
 package ru.asayke.jwtappdemo.models;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "users")
+@Data
 public class User extends BaseEntity {
     @Column(name = "username")
     private String username;
