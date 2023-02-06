@@ -1,5 +1,6 @@
 package ru.asayke.jwtappdemo.contoller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,12 @@ import ru.asayke.jwtappdemo.service.UserService;
 @RequestMapping(value = "/api/v1/admin/")
 public class AdminControllerV1 {
     private final UserService userService;
+    private final ModelMapper mapper;
 
     @Autowired
-    public AdminControllerV1(UserService userService) {
+    public AdminControllerV1(UserService userService, ModelMapper mapper) {
         this.userService = userService;
+        this.mapper = mapper;
     }
 
     @GetMapping(value = "users/{id}")
@@ -28,6 +31,10 @@ public class AdminControllerV1 {
         if(user == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        return ResponseEntity.ok(AdminUserDTO.fromUser(user));
+        return ResponseEntity.ok(convertToAdminUserDTO(user));
+    }
+
+    private AdminUserDTO convertToAdminUserDTO(User user) {
+        return mapper.map(user, AdminUserDTO.class);
     }
 }
